@@ -1,4 +1,5 @@
 import { model, Schema } from "mongoose";
+import jwt from "jsonwebtoken";
 
 const UserSchema = new Schema(
   {
@@ -37,6 +38,14 @@ const UserSchema = new Schema(
     timestamps: true,
   }
 );
+
+UserSchema.methods = {
+  generateJwtToken: function () {
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, {
+      expiresIn: process.env.JWT_EXPIRY,
+    });
+  },
+};
 
 const User = model("User", UserSchema);
 
