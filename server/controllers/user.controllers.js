@@ -56,9 +56,7 @@ export const login = async (req, res) => {
 };
 
 export const getProfile = async (req, res) => {
-  const { token } = req.cookies;
-  const tokenDetails = await jwt.verify(token, process.env.JWT_SECRET_KEY);
-  const {id} = tokenDetails;
-  const userDetails = await User.findById(id);
-  return res.status(200).send(userDetails); 
+  const userId = req.user.id;
+  const userDetails = await User.findById(userId);
+  return res.status(200).send(userDetails);
 };
