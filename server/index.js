@@ -24,5 +24,5 @@ app.use("*", (req, res) => {
 const port = process.env.PORT | 5050;
 app.listen(port, async () => {
   await connectToDatabase();
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server is up and running on - http://localhost:${port}`);
 });

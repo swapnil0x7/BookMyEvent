@@ -1,15 +1,32 @@
 import Movie from "../models/movie.models.js";
+import Theatre from "../models/theatre.models.js";
 
 export const createMovie = async (req, res) => {
   try {
     const movieData = req.body;
-    const movie = await Movie.create(movieData);
+
+    // First check if there is a theatre with the given details
+    // If not, create the theatre first then proceed to add the movie
+    const { theatre } = movieData;
+    const theatreDetails = theatre;
+
+    let existingTheatre = await Theatre.findOne({ name: theatreDetails.name });
+    if (!existingTheatre) {
+      existingTheatre = await Theatre.create(theatreDetails);
+    }
+
+    // Adding movie
+    const movie = await Movie.create({
+      ...movieData,
+      theatre: existingTheatre._id,
+    });
 
     res
       .status(201)
       .send({ status: true, message: "Movie created successfully!" });
   } catch (error) {
-    res.status(500).send({ status: false, message: error });
+    console.error(error); // Log the actual error to the console
+    res.status(500).send({ status: false, message: error.message });
   }
 };
 
@@ -24,8 +41,10 @@ export const getMovies = async (req, res) => {
       queryFilter.title = new RegExp(title, "i");
     }
 
-    // query filter for LIVE, UPCOMING movie list 
+    // query filter for LIVE, UPCOMING movie list
     switch (type) {
+      case "ALL":
+        break;
       case "UPCOMING":
         queryFilter.releaseDate = { $gte: new Date() };
         break;
@@ -38,7 +57,7 @@ export const getMovies = async (req, res) => {
         break;
     }
 
-    const list = await Movie.find(queryFilter);
+    const list = await Movie.find(queryFilter).populate("theatre");
     res.status(200).send({
       status: true,
       message: "Movie fetched successfully!",
