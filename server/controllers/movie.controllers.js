@@ -15,20 +15,24 @@ export const createMovie = async (req, res) => {
 
 export const getMovies = async (req, res) => {
   try {
+    let queryFilter = {};
     const type = req.query.type;
-    let queryFilter;
+    const title = req.query.title;
+
+    if (title) {
+      queryFilter.title = new RegExp(title, "i");
+    }
 
     switch (type) {
       case "UPCOMING":
-        queryFilter = { releaseDate: { $gte: new Date() } };
+        queryFilter.releaseDate = { $gte: new Date() };
         break;
 
       case "LIVE":
-        queryFilter = { releaseDate: { $lte: new Date() } };
+        queryFilter.releaseDate = { $lte: new Date() };
         break;
 
       default:
-        queryFilter = {};
         break;
     }
 
