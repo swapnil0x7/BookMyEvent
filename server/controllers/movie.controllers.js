@@ -19,10 +19,12 @@ export const getMovies = async (req, res) => {
     const type = req.query.type;
     const title = req.query.title;
 
+    // search query filter
     if (title) {
       queryFilter.title = new RegExp(title, "i");
     }
 
+    // query filter for LIVE, UPCOMING movie list 
     switch (type) {
       case "UPCOMING":
         queryFilter.releaseDate = { $gte: new Date() };

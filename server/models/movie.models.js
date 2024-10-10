@@ -26,7 +26,7 @@ const MovieSchema = new Schema({
   genre: {
     type: String,
     required: true,
-    enum: ["Drama", "Triller", "Horror", "Fiction"],
+    enum: ["Drama", "Thriller", "Horror", "Fiction"],
   },
   releaseDate: {
     type: Date,
@@ -39,6 +39,11 @@ const MovieSchema = new Schema({
       enum: ["English", "Hindi", "Telugu"],
     },
   ],
+  theatre: {
+    type: Schema.Types.ObjectId,
+    ref: "theatre",
+    required: true,
+  },
 });
 
 const Movie = new model("movie", MovieSchema);
