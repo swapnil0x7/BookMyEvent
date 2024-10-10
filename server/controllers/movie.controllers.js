@@ -20,11 +20,11 @@ export const getMovies = async (req, res) => {
 
     switch (type) {
       case "UPCOMING":
-        queryFilter = { releaseDate: { $gte: "2024-10-11" } };
+        queryFilter = { releaseDate: { $gte: new Date() } };
         break;
 
       case "LIVE":
-        queryFilter = { releaseDate: { $lte: "2024-10-10" } };
+        queryFilter = { releaseDate: { $lte: new Date() } };
         break;
 
       default:
